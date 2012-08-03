@@ -4,11 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{D84281D3-91DC-44BA-AD42-851DEFE42BF2}"
 	ProjectSection(SolutionItems) = preProject
 		build.bat = build.bat
+		scripts\db.sql = scripts\db.sql
 		nant.build = nant.build
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Properties.Web", "src\Properties.Web\Properties.Web.csproj", "{F1D6E742-0C7B-45B2-A247-28728A348883}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Properties.Test", "src\Properties.Test\Properties.Test.csproj", "{D338F0AF-EA76-4675-8CCE-B45597360B85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +23,10 @@ Global
 		{F1D6E742-0C7B-45B2-A247-28728A348883}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1D6E742-0C7B-45B2-A247-28728A348883}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1D6E742-0C7B-45B2-A247-28728A348883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D338F0AF-EA76-4675-8CCE-B45597360B85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D338F0AF-EA76-4675-8CCE-B45597360B85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D338F0AF-EA76-4675-8CCE-B45597360B85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D338F0AF-EA76-4675-8CCE-B45597360B85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
