@@ -16,7 +16,7 @@
   <property name="nuget" value="${path::get-full-path(dir.tools)}" />
   <property name="nuget.packages" value="${dir}\packages" />
   <property name="nuget.cache" value="C:\Users\${environment::get-user-name()}\AppData\Local\NuGet\Cache" />
-  <property name="nuget.install" value="${dir}\nuget.install.bat" />
+  <property name="nuget.install" value="${dir}\scripts\nuget.install.bat" />
   <property name="nuget.params.install" value="${nuget} ${path::get-full-path(nuget.packages)}" />
   <!--msbuild-->
   <property name="msbuild" value="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" />

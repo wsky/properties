@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Configuration Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Head{
+    <style type="text/css">
+        div.row div.span3
+        {
+            padding: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height:25px;
+            max-height:50px;
+            word-break:break-all;
+        }
+        div.row div.span3 a{ text-decoration:none; color:#232323}
+        .pop-title{ color:#d14;}
+        .pop-content{ line-height:25px; word-break:break-all}
+    </style>
+}
+<header class="jumbotron subhead" id="overview">
+    <h1>
+        Configuration</h1>
+    <p class="lead"></p>
+    <div class="subnav">
+        <ul class="nav nav-pills">
+            <li><a href="#Table1"><i class="icon-list-alt"></i> Table1</a></li>
+            <li><a href="#Table2"><i class="icon-list-alt"></i> Table2</a></li>
+        </ul>
+    </div>
+</header>
+<section id="Table1">
+    <div class="page-header">
+        <h1>
+            Table1 
+            <small>description</small>
+            <span class="label label-info">Debug</span>
+            <span class="label label-warning">Test</span>
+            <span class="label label-success">Release</span>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="span3 well" 
+            data-original-title="<span class='pop-title'>key</span>" 
+            data-content="
+            <div class='pop-content'>
+            <span class='label label-info'>Debug</span>
+            <div>abcd11111111111111111111111111111111111</div>
+            <span class='label label-warning'>Test</span>
+            <div>abcd11111111111111111111111111111111111</div>
+            <span class='label label-success'>Release</span>
+            <div>abcd11111111111111111111111111111111111</div>
+            </div>
+            ">
+            <a href="@Url.Action("Properties/1")">
+            <code>key</code>
+            <p>
+            1111111111111111111111111111111111111111111111111
+            </p>
+            </a>
+        </div>
+    </div>
+</section>
+<section id="Table2">
+    <div class="page-header">
+        <h1>
+            Table2 <small>description</small></h1>
+    </div>
+    <div class="row">
+        <div class="span3 well">
+            key</div>
+        <div class="span3 well">
+            key</div>
+        <div class="span3 well">
+            key</div>
+        <div class="span3 well">
+            key</div>
+    </div>
+</section>
+
+@section Bottom{
+    <script type="text/javascript">
+        $(function () {
+            $('div.span3').popover();
+        });
+    </script>
+}

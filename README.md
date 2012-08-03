@@ -1,4 +1,4 @@
-# properties
+# Properties
 ==========
 
 properties/configuration/kv management module and system for your app
@@ -53,7 +53,11 @@ Make configuration easier :)
 
 ## License
 
-	Copyright (c) wsky. mailto:wskyhx@gmail.com follow:@wskyhx
+	Copyright 2012 wsky. 
+	
+	mailto:wskyhx@gmail.com 
+	
+	follow:@wskyhx
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 

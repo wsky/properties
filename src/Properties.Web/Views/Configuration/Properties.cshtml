@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head{
+    <style type="text/css">
+        div.row div.span3
+        {
+            padding: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height:25px;
+            max-height:50px;
+            word-break:break-all;
+        }
+        div.row div.span3 a{ text-decoration:none; color:#232323}
+        .pop-title{ color:#d14;}
+        .pop-content{ line-height:25px; word-break:break-all}
+        form textarea{ height:100px; width:95%}
+    </style>
+}
+<header>
+    <h1>
+        Table</h1>
+    <p class="lead">xxxxx
+    <span class="label label-info">Debug</span>
+    <span class="label label-warning">Test</span>
+    <span class="label label-success">Release</span>
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            <a class="btn" href="#edit_config" data-toggle="modal">
+                <i class="icon-cog"></i>
+                Edit
+            </a>
+        </div>
+        <div class="btn-group">
+            <a class="btn" href="#">
+                <i class="icon-upload"></i>
+                Commit All
+            </a>
+        </div>
+        <div class="btn-group">
+            <a class="btn btn-danger" href="#">
+                <i class="icon-trash"></i>
+                Drop Configuration
+            </a>
+        </div>
+    </div>
+    </p>
+
+    <div class="alert">PS: you must push changes after updating properties. </div>
+</header>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">Properties</a></li>
+    <li><a href="#tab2" data-toggle="tab">uncommited</a></li>
+    <li><a href="#tab3" data-toggle="tab">logs</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+        <div class="row">
+            <div class="span3 well" 
+            data-original-title="<span class='pop-title'>key</span>" 
+            data-content="
+            <div class='pop-content'>
+            <span class='label label-info'>Debug</span>
+            <div>abcd11111111111111111111111111111111111</div>
+            <span class='label label-warning'>Test</span>
+            <div>abcd11111111111111111111111111111111111</div>
+            <span class='label label-success'>Release</span>
+            <div>abcd11111111111111111111111111111111111</div>
+            </div>
+            ">
+            <a href="#">
+            <code>key</code>
+            <p>
+            1111111111111111111111111111111111111111111111111
+            </p>
+            </a>
+        </div>
+    </div>
+    </div>
+    <div class="tab-pane" id="tab2">
+        <ul class="nav nav-tabs nav-stacked">
+            <li>
+                <a>
+                    <span class="badge">2012-10-10</span>
+                    wsky change
+                    <code>key</code> from <span class="label label-important">1</span> to <span class="label label-success">1</span>
+                     <button class="close">x</button>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-pane" id="tab3">
+        <ul class="nav nav-tabs nav-stacked">
+            <li>
+                <a>
+                    <button class="btn"><i class="icon-repeat"></i></button>
+                    <span class="badge">2012-10-10</span>
+                    wsky change
+                    <code>key:Debug</code> from <span class="label label-important">1</span> to <span class="label label-success">1</span>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <button class="btn"><i class="icon-repeat"></i></button>
+                    <span class="badge">2012-10-10</span>
+                    wsky change
+                    <code>key</code> from <span class="label label-important">1</span> to <span class="label label-success">1</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal hide" id="edit_config">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+            ×</button>
+        <h3>
+            Edit Configuration</h3>
+    </div>
+    <div class="modal-body">
+        <form>
+            <textarea name="content" placeholder="property value"></textarea>
+            <br />
+            <span class="label label-info">Debug</span>
+            <br />
+            <textarea name="content" placeholder="property value"></textarea>
+            <br />
+            <span class="label label-warning">Test</span>
+            <br />
+            <textarea name="content" placeholder="property value"></textarea>
+            <br />
+            <span class="label label-success">Release</span>
+            <br />
+            <textarea name="content" placeholder="property value"></textarea>
+            <br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a class="btn" data-dismiss="modal">Cancel</a> 
+        <a class="btn btn-primary" onclick="doFeedback()">Done</a>
+    </div>
+</div>
+<div class="modal hide" id="edit_property">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+            ×</button>
+        <h3>
+            Edit Property</h3>
+    </div>
+    <div class="modal-body">
+        <form>
+            <textarea name="content" placeholder="property value"></textarea>
+            <br />
+            <span class="label label-info">Debug</span>
+            <br />
+            <textarea name="content" placeholder="property value"></textarea>
+            <br />
+            <span class="label label-warning">Test</span>
+            <br />
+            <textarea name="content" placeholder="property value"></textarea>
+            <br />
+            <span class="label label-success">Release</span>
+            <br />
+            <textarea name="content" placeholder="property value"></textarea>
+            <br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a class="btn" data-dismiss="modal">Cancel</a> 
+        <a class="btn btn-primary" onclick="doFeedback()">Done</a>
+    </div>
+</div>
+
+@section Bottom{
+    <script type="text/javascript">
+        $(function () {
+            $('div.span3').popover().click(function () { $('#edit_property').modal('show'); });
+        });
+    </script>
+}
