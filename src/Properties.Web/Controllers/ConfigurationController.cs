@@ -28,6 +28,7 @@ namespace Properties
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime CreateTime { get; set; }
+        public int CreatorId { get; set; }
     }
     public class PropertyInfo
     {
@@ -82,25 +83,22 @@ namespace Properties
                     this._dict_release = _serializer.Deserialize<System.Collections.Concurrent.ConcurrentDictionary<string, string>>(this.ReleaseValueString);
         }
     }
+    public class Account
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public DateTime CreateTime { get; set; }
+    }
     public static class SqlHelper
     {
-        public static IEnumerable<ConfigurationInfo> GetConfigurations()
+        public static IEnumerable<ConfigurationInfo> GetConfigurations(Account account)
         {
-            using (var conn = Management())
-                return conn.Query<ConfigurationInfo>("select ");
+            using (var conn = Connection())
+                return conn.Query<ConfigurationInfo>("select CreatorId=@id", new { id = account.ID });
         }
-        private static System.Data.Common.DbConnection Management()
+        private static System.Data.Common.DbConnection Connection()
         {
-            return new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings[Config.CONN_MANAGEMENT].ToString());
+            return new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["propertis"].ToString());
         }
-        private static System.Data.Common.DbConnection Release()
-        {
-            return new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings[Config.CONN_RELEASE].ToString());
-        }
-    }
-    public static class Config
-    {
-        public static readonly string CONN_MANAGEMENT = "management";
-        public static readonly string CONN_RELEASE = "release";
     }
 }

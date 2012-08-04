@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Castle.Windsor;
 
 namespace Properties.Web
 {
@@ -13,22 +14,16 @@ namespace Properties.Web
         {
             filters.Add(new HandleErrorAttribute());
         }
-
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
-            routes.MapRoute(
-                "Default",
-                "{controller}/{action}/{id}",
-                new { controller = "Configuration", action = "Index", id = UrlParameter.Optional }
-            );
+            routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.ico(/.*)?" });
+            routes.MapRoute("Default", "{controller}/{action}/{id}", new { controller = "Configuration", action = "Index", id = UrlParameter.Optional });
         }
 
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
         }

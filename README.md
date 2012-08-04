@@ -31,7 +31,7 @@ Make configuration easier :)
 	<?xml version="1.0" encoding="utf-8" ?>
 	<configuration>
 	  <properties>
-		<appName>
+		<appName description="">
 			<debug>Your App Description when debug<debug>
 			<test>Your App Description when test<test>
 		</appName>
@@ -39,6 +39,11 @@ Make configuration easier :)
 	</configuration>
 	```
 
+	```json
+	{
+		"appName": { "debug": "Your App Description", "test": "Your App Description" }
+	}
+	```
 ## Trace
 
 ## Versioned
