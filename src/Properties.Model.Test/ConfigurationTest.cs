@@ -136,6 +136,7 @@ namespace Properties.Model.Test
             var c = new Configuration(this.CreateApp(), cn);
             c.SetDescription(str);
             c.AddFlag(str);
+            c.AddProperty(str);
             this._configService.Create(c);
 
             this.Evict(c);
