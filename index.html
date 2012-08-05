@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Properties by wsky</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/wsky/properties">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Properties</h1>
+            <h2>properties/configuration/kv management module and system for your app</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/wsky/properties/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/wsky/properties/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>Properties</h1>
+
+<h1></h1>
+
+<p>properties/configuration/kv management module and system for your app</p>
+
+<p>Cloud service or private deploy</p>
+
+<p>Make configuration easier :)</p>
+
+<h2>Format</h2>
+
+<ul>
+<li>
+<p>simply</p>
+
+<div class="highlight"><pre><span class="cp">&lt;?xml version="1.0" encoding="utf-8" ?&gt;</span>
+<span class="nt">&lt;configuration&gt;</span>
+  <span class="nt">&lt;properties&gt;</span>
+    <span class="nt">&lt;appName&gt;</span>Your App Description<span class="nt">&lt;/appName&gt;</span>
+  <span class="nt">&lt;/properties&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">"appName"</span><span class="p">:</span><span class="s2">"Your App Description"</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p>Flags</p>
+
+<div class="highlight"><pre><span class="cp">&lt;?xml version="1.0" encoding="utf-8" ?&gt;</span>
+<span class="nt">&lt;configuration&gt;</span>
+  <span class="nt">&lt;properties&gt;</span>
+    <span class="nt">&lt;appName</span> <span class="na">description=</span><span class="s">""</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;debug&gt;</span>Your App Description when debug<span class="nt">&lt;debug&gt;</span>
+        <span class="nt">&lt;test&gt;</span>Your App Description when test<span class="nt">&lt;test&gt;</span>
+    <span class="nt">&lt;/appName&gt;</span>
+  <span class="nt">&lt;/properties&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">"appName"</span><span class="p">:</span> <span class="p">{</span> <span class="nt">"debug"</span><span class="p">:</span> <span class="s2">"Your App Description"</span><span class="p">,</span> <span class="nt">"test"</span><span class="p">:</span> <span class="s2">"Your App Description"</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>Trace</h2>
+</li>
+</ul><h2>Versioned</h2>
+
+<h2>Security</h2>
+
+<ul>
+<li>X509</li>
+</ul><h2>Rest API</h2>
+
+<ul>
+<li>GET</li>
+</ul><h2>License</h2>
+
+<pre><code>Copyright 2012 wsky. 
+
+mailto:wskyhx@gmail.com 
+
+follow:@wskyhx
+
+Licensed under the Apache License, Version 2.0 (the "License");
+
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, 
+
+software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+See the License for the specific language governing permissions and limitations under the License.
+</code></pre>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/wsky">wsky</a> can be found on <a href="https://github.com/wsky/properties">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-33897109-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
