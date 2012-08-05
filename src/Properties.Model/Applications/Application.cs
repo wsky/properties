@@ -18,7 +18,7 @@ namespace Properties.Model
 {
     /// <summary>configuration owner
     /// </summary>
-    public class App : EntityBase<Guid>, IAggregateRoot
+    public class Application : EntityBase<Guid>, IAggregateRoot
     {
         public string Name { get; private set; }
         public DateTime CreateTime { get; private set; }
@@ -27,12 +27,12 @@ namespace Properties.Model
         public string Token { get; private set; }
         public Guid CreatorAccountId { get; private set; }
 
-        protected App()
+        protected Application()
         {
             this.CreateTime = DateTime.UtcNow;
             this.Token = Guid.NewGuid().ToString();
         }
-        public App(Account account)
+        public Application(Account account)
             : this()
         {
             Assert.IsNotNull(account);

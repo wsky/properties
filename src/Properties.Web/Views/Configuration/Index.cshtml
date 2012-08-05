@@ -1,91 +1,134 @@
 ﻿@{
     ViewBag.Title = "Configuration Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var all = ViewBag.Configurations as IEnumerable<Properties.Model.Configuration>;
+    var label = new string[] { "label-success", "label-warning", "label-important", "label-info", "label-inverse" };
 }
 @section Head{
     <style type="text/css">
-        div.row div.span3
+        div.page-header h2 a
+        {
+            text-decoration: none;
+            color: #232323;
+        }
+        div.row div.span2
         {
             padding: 5px;
             overflow: hidden;
+            max-height: 75px;
             text-overflow: ellipsis;
-            line-height:25px;
-            max-height:50px;
-            word-break:break-all;
+            line-height: 25px;
+            word-break: break-all;
         }
-        div.row div.span3 a{ text-decoration:none; color:#232323}
-        .pop-title{ color:#d14;}
-        .pop-content{ line-height:25px; word-break:break-all}
+        div.row div.span2 a
+        {
+            text-decoration: none;
+            color: #232323;
+        }
+        .pop-title
+        {
+            color: #d14;
+        }
+        .pop-content
+        {
+            line-height: 25px;
+            word-break: break-all;
+        }
     </style>
 }
 <header class="jumbotron subhead" id="overview">
+    <div class="btn-group">
+        <button class="btn btn-large btn-inverse dropdown-toggle" data-toggle="dropdown">
+            Application <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a>app</a></li>
+        </ul>
+    </div>
+    <hr />
     <h1>
-        Configuration</h1>
-    <p class="lead"></p>
-
+        Configuration
+    </h1>
+    <p class="lead">
+    </p>
     <div class="input-append">
-        <input type="text" placeholder="configuration name"/><button class="btn"><i class="icon-plus"></i> New</button>
-    </div><br />
+        <input type="text" placeholder="configuration name" /><button class="btn"><i class="icon-plus"></i>&nbsp;New Configuration</button>
+    </div>
+    <br />
     <div class="subnav">
         <ul class="nav nav-pills">
-            <li><a href="#Table1"><i class="icon-list-alt"></i> Table1</a></li>
-            <li><a href="#Table2"><i class="icon-list-alt"></i> Table2</a></li>
+            @foreach (var c in all)
+            {
+                <li><a href="#@c.Name"><i class="icon-list-alt"></i>@c.Name</a></li>
+            }
         </ul>
     </div>
 </header>
-<section id="Table1">
-    <div class="page-header">
-        <h1>
-            Table1 
-            <small>description</small>
-            <span class="label label-info">Debug</span>
-            <span class="label label-warning">Test</span>
-            <span class="label label-success">Release</span>
-        </h1>
-    </div>
-    <div class="row">
-        <div class="span3 well" 
-            data-original-title="<span class='pop-title'>key</span>" 
-            data-content="
-            <div class='pop-content'>
-            <span class='label label-info'>Debug</span>
-            <div>abcd11111111111111111111111111111111111</div>
-            <span class='label label-warning'>Test</span>
-            <div>abcd11111111111111111111111111111111111</div>
-            <span class='label label-success'>Release</span>
-            <div>abcd11111111111111111111111111111111111</div>
-            </div>
-            ">
-            <a href="@Url.Action("Properties/1")">
-            <code>key</code>
-            <p>
-            1111111111111111111111111111111111111111111111111
-            </p>
-            </a>
+@foreach (var c in all)
+{
+    <section id="@c.Name">
+        <div class="page-header">
+            <h2>
+                @Html.ActionLink(c.Name, "Properties/" + c.Name)
+                <small>@c.Description</small>
+                @for (var i = 0; i < c.Flags.Count(); i++)
+                { 
+                    <span class="label @label[i % 5]">@c.Flags.ElementAt(i)</span>    
+                }
+            </h2>
         </div>
-    </div>
-</section>
-<section id="Table2">
-    <div class="page-header">
-        <h1>
-            Table2 <small>description</small></h1>
-    </div>
-    <div class="row">
-        <div class="span3 well">
-            key</div>
-        <div class="span3 well">
-            key</div>
-        <div class="span3 well">
-            key</div>
-        <div class="span3 well">
-            key</div>
-    </div>
-</section>
-
+        <div class="row">
+            @for (var j = 0; j < c.Properties.Count(); j++)
+            {
+                if (j == 20) { break; }
+                var p = c.GetProperty(c.Properties.ElementAt(j));
+                <div class="span2 well" 
+                data-original-title="<span class='pop-title'>@p.Name</span>" 
+                data-content="
+                    <div class='pop-content'>
+                        @for (var i = 0; i < c.Flags.Count(); i++)
+                        {
+                            <span class='label @label[i % 5]'>@c.Flags.ElementAt(i)</span>
+                            <div>@p[c.Flags.ElementAt(i)]</div>
+                        }
+                    </div>
+                    "> <a href="@Url.Action("Properties/" + c.Name)"><code>@p.Name</code>
+                        @p.Description
+                        <p>
+                            @p.Value
+                        </p>
+                    </a>
+                </div>
+            }
+        </div>
+        @Html.ActionLink(">> More", "Properties/" + c.Name)
+    </section>
+}
 @section Bottom{
     <script type="text/javascript">
         $(function () {
-            $('div.span3').popover();
+            $('div.span2').popover({ delay: 300 });
+
+            // fix sub nav on scroll
+            //http://jsfiddle.net/baptme/ydY6W/
+            var $win = $(window)
+            var $nav = $('.subnav');
+            var navTop = $('.subnav').length && $('.subnav').offset().top - 40;
+            var isFixed = 0;
+            processScroll()
+            $win.on('scroll', processScroll);
+            // hack sad times - holdover until rewrite for 2.1
+            $nav.on('click', function () { if (!isFixed) setTimeout(function () { $win.scrollTop($win.scrollTop() - 47) }, 10) });
+            function processScroll() {
+                var i, scrollTop = $win.scrollTop()
+                if (scrollTop >= navTop && !isFixed) {
+                    isFixed = 1
+                    $nav.addClass('subnav-fixed')
+                } else if (scrollTop <= navTop && isFixed) {
+                    isFixed = 0
+                    $nav.removeClass('subnav-fixed')
+                }
+            }
         });
     </script>
 }

@@ -1,6 +1,8 @@
 #folders
 build
 packages
+application_config
+logs
 %APPDATA%
 Debug
 bin

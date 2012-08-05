@@ -18,14 +18,14 @@ namespace Properties.Model.Test
 {
     [TestFixture]
     [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-    public class AppTest : BaseTest
+    public class ApplicationTest : BaseTest
     {
         [Test]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
         public void Create()
         {
             var account = this.CreateAccount();
-            var app = new App(account);
+            var app = new Application(account);
             Assert.IsNotNullOrEmpty(app.Token);
 
             this._appService.Create(app);
@@ -48,8 +48,8 @@ namespace Properties.Model.Test
         public void GetApps()
         {
             var account = this.CreateAccount();
-            this._appService.Create(new App(account));
-            this._appService.Create(new App(account));
+            this._appService.Create(new Application(account));
+            this._appService.Create(new Application(account));
             Assert.AreEqual(2, this._appService.GetApps(account).Count());
         }
     }

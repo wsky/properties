@@ -195,9 +195,9 @@ namespace Properties.Model.Test
             Assert.AreEqual(3, this._configService.GetConfigurations(app).Count());
         }
 
-        private App GetTempApp()
+        private Application GetTempApp()
         {
-            return new App(new Account(this.RandomString()));
+            return new Application(new Account(this.RandomString()));
         }
     }
 }

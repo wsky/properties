@@ -13,11 +13,11 @@ using FluentNHibernate.Mapping;
 
 namespace Properties.Model.Mappings
 {
-    public class AppMap : ClassMap<App>
+    public class ApplicationMap : ClassMap<Application>
     {
-        public AppMap()
+        public ApplicationMap()
         {
-            Table("Properties_App");
+            Table("Properties_Application");
             Id(m => m.ID);
             Map(m => m.Name).Length(255);
             Map(m => m.CreateTime);

@@ -17,37 +17,37 @@ using Castle.Services.Transaction;
 
 namespace Properties.Model
 {
-    public interface IAppService
+    public interface IApplicationService
     {
-        void Create(App app);
-        App GetApp(Guid id);
-        App GetApp(string token);
-        IEnumerable<App> GetApps(Account account);
+        void Create(Application app);
+        Application GetApp(Guid id);
+        Application GetApp(string token);
+        IEnumerable<Application> GetApps(Account account);
     }
     [Transactional]
-    public class AppService : IAppService
+    public class ApplicationService : IApplicationService
     {
-        private static IAppRepository _repository;
-        static AppService()
+        private static IApplicationRepository _repository;
+        static ApplicationService()
         {
-            _repository = RepositoryFactory.GetRepository<IAppRepository, Guid, App>();
+            _repository = RepositoryFactory.GetRepository<IApplicationRepository, Guid, Application>();
         }
 
         #region IAppService Members
         [Transaction(TransactionMode.Requires)]
-        void IAppService.Create(App app)
+        void IApplicationService.Create(Application app)
         {
             _repository.Add(app);
         }
-        App IAppService.GetApp(Guid id)
+        Application IApplicationService.GetApp(Guid id)
         {
             return id != Guid.Empty ? _repository.FindBy(id) : null;
         }
-        App IAppService.GetApp(string token)
+        Application IApplicationService.GetApp(string token)
         {
             return !string.IsNullOrWhiteSpace(token) ? _repository.FindByToken(token) : null;
         }
-        IEnumerable<App> IAppService.GetApps(Account account)
+        IEnumerable<Application> IApplicationService.GetApps(Account account)
         {
             return _repository.FindByCreator(account.ID);
         }

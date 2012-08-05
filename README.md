@@ -6,6 +6,16 @@ properties/configuration/kv management module and system for your app
 Cloud service or private deploy
 
 Make configuration easier :)
+## Demo
+
+- On AppHarbor
+- On Azure
+
+- screenshoots
+
+![configuration](/screenshoots/configuration.png)
+
+![configuration](/screenshoots/properties.png)
 
 ## Format
 

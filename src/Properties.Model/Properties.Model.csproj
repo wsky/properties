@@ -47,16 +47,16 @@
     <Compile Include="Accounts\Account.cs" />
     <Compile Include="Accounts\AccountService.cs" />
     <Compile Include="Accounts\IAccountRepository.cs" />
-    <Compile Include="Apps\App.cs" />
-    <Compile Include="Apps\AppService.cs" />
-    <Compile Include="Apps\IAppRepository.cs" />
-    <Compile Include="Configs\Configuration.cs" />
-    <Compile Include="Configs\ConfigurationService.cs" />
-    <Compile Include="Configs\IConfigurationRepository.cs" />
+    <Compile Include="Applications\Application.cs" />
+    <Compile Include="Applications\ApplicationService.cs" />
+    <Compile Include="Applications\IAppRepository.cs" />
+    <Compile Include="Configurations\Configuration.cs" />
+    <Compile Include="Configurations\ConfigurationService.cs" />
+    <Compile Include="Configurations\IConfigurationRepository.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Lock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Configs\Property.cs" />
+    <Compile Include="Configurations\Property.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

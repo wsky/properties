@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{71DA5FD8-B314-482C-9C5D-D253D27DD268}</ProjectGuid>
+    <ProjectGuid>{15A95D2D-F034-46FF-94E4-33EEA04FB67B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Properties.Repositories</RootNamespace>
-    <AssemblyName>Properties.Repositories</AssemblyName>
+    <RootNamespace>ConfigFiles</RootNamespace>
+    <AssemblyName>ConfigFiles</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,40 +31,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSharp.Core">
-      <HintPath>..\..\packages\CodeSharp.Core.2.0\lib\net40\CodeSharp.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="CodeSharp.Core.Castles">
-      <HintPath>..\..\packages\CodeSharp.Core.Castles.2.0\lib\net40\CodeSharp.Core.Castles.dll</HintPath>
-    </Reference>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\..\packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountRepository.cs" />
-    <Compile Include="ApplicationRepository.cs" />
-    <Compile Include="ConfigurationRepository.cs" />
-    <Compile Include="LockRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Properties.Model\Properties.Model.csproj">
-      <Project>{F77123FF-217F-4567-B0B5-0850EA47B5C6}</Project>
-      <Name>Properties.Model</Name>
-    </ProjectReference>
+    <EmbeddedResource Include="PropertiesWeb\log4net.config" />
+    <EmbeddedResource Include="PropertiesWeb\Debug.properties.config" />
+    <EmbeddedResource Include="PropertiesWeb\facilities.config" />
+    <EmbeddedResource Include="PropertiesWeb\properties.config" />
+    <EmbeddedResource Include="PropertiesWeb\Release.properties.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

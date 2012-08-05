@@ -12,13 +12,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CodeSharp.Core.RepositoryFramework;
+using CodeSharp.Core.Castles;
+using Properties.Model;
+using NHibernate.Criterion;
 
-namespace Properties.Model
+namespace Properties.Repositories
 {
-    public interface IAppRepository : IRepository<Guid, App>
+    public class ApplicationRepository : NHibernateRepositoryBase<Guid, Application>, IApplicationRepository
     {
-        App FindByToken(string token);
-        IEnumerable<App> FindByCreator(Guid creatorAccountId);
+        public Application FindByToken(string token)
+        {
+            return this.FindOne(Expression.Eq("Token", token));
+        }
+
+        public IEnumerable<Application> FindByCreator(Guid creatorAccountId)
+        {
+            return this.FindAll(Expression.Eq("CreatorAccountId", creatorAccountId));
+        }
     }
 }

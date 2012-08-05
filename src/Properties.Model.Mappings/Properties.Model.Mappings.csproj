@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountMap.cs" />
-    <Compile Include="AppMap.cs" />
+    <Compile Include="ApplicationMap.cs" />
     <Compile Include="ConfigurationMap.cs" />
     <Compile Include="LockMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

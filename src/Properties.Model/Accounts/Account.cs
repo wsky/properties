@@ -32,5 +32,11 @@ namespace Properties.Model
             Assert.IsValidKey(name);
             this.Name = name;
         }
+
+        public bool Verify(string password)
+        {
+            Assert.IsNotNullOrWhiteSpace(password);
+            return password == this._password;
+        }
     }
 }

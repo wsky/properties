@@ -20,6 +20,12 @@ namespace Properties.Model
     {
         protected Lock() { }
         public Lock(string id) { this.ID = id; }
+
+        public static void InitAll(ILockHelper helper)
+        {
+            helper.Init<Account>();
+            helper.Init<Configuration>();
+        }
     }
     /// <summary>provide global lock
     /// </summary>

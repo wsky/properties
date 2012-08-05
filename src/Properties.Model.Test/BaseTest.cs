@@ -27,7 +27,7 @@ namespace Properties.Model.Test
         protected ILog _log;
         protected Castle.Facilities.NHibernateIntegration.ISessionManager _sessionManager;
         protected IAccountService _accountService;
-        protected IAppService _appService;
+        protected IApplicationService _appService;
         protected IConfigurationService _configService;
 
         [TestFixtureSetUp]
@@ -43,7 +43,7 @@ namespace Properties.Model.Test
                     .RenderProperties()
                     .Castle(o => this.Resolve(o.Container));
 
-                DependencyResolver.Resolve<ILockHelper>().Init<Account>();
+                Lock.InitAll(DependencyResolver.Resolve<ILockHelper>());
             }
             catch (Exception e)
             {
@@ -53,9 +53,8 @@ namespace Properties.Model.Test
             this._log = DependencyResolver.Resolve<ILoggerFactory>().Create(this.GetType());
             this._sessionManager = DependencyResolver.Resolve<Castle.Facilities.NHibernateIntegration.ISessionManager>();
             this._accountService = DependencyResolver.Resolve<IAccountService>();
-            this._appService = DependencyResolver.Resolve<IAppService>();
+            this._appService = DependencyResolver.Resolve<IApplicationService>();
             this._configService = DependencyResolver.Resolve<IConfigurationService>();
-
             DependencyResolver.Resolve<ILockHelper>().Require<Account>();
         }
 
@@ -102,9 +101,9 @@ namespace Properties.Model.Test
             this._accountService.Create(a);
             return a;
         }
-        protected App CreateApp()
+        protected Application CreateApp()
         {
-            var a = new App(this.CreateAccount());
+            var a = new Application(this.CreateAccount());
             this._appService.Create(a);
             return a;
         }

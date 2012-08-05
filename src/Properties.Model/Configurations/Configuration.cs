@@ -40,7 +40,7 @@ namespace Properties.Model
             this.CreateTime = DateTime.UtcNow;
             this._properties = new List<Property>();
         }
-        public Configuration(App app, string name)
+        public Configuration(Application app, string name)
             : this()
         {
             Assert.IsValidKey(name);

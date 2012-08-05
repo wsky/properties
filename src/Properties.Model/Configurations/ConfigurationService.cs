@@ -12,8 +12,8 @@ namespace Properties.Model
         void Create(Configuration config);
         void Update(Configuration config);
         Configuration GetConfiguration(Guid id);
-        Configuration GetConfiguration(App app, string name);
-        IEnumerable<Configuration> GetConfigurations(App app);
+        Configuration GetConfiguration(Application app, string name);
+        IEnumerable<Configuration> GetConfigurations(Application app);
     }
     [Transactional]
     public class ConfigurationService : IConfigurationService
@@ -46,11 +46,11 @@ namespace Properties.Model
         {
             return _repository.FindBy(id);
         }
-        Configuration IConfigurationService.GetConfiguration(App app, string name)
+        Configuration IConfigurationService.GetConfiguration(Application app, string name)
         {
             return _repository.FindBy(app.ID, name);
         }
-        IEnumerable<Configuration> IConfigurationService.GetConfigurations(App app)
+        IEnumerable<Configuration> IConfigurationService.GetConfigurations(Application app)
         {
             return _repository.FindByApp(app.ID);
         }

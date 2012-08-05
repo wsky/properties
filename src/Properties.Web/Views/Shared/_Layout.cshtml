@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>@ViewBag.Title - App Properties</title>
+    <title>@ViewBag.Title - Properties</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="app properties">
     <meta name="author" content="wsky">
@@ -18,44 +18,46 @@
 
     @RenderSection("Head", false)
 </head>
-<body data-spy="scroll" data-target=".subnav" data-offset="50">
+<body data-spy="scroll" data-target=".subnav" data-offset="60">
+    
     <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">AppProperties</a>
-          <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="icon-user"></i> @User.Identity.Name
-              <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Profile</a></li>
-              <li class="divider"></li>
-              <li><a href="#">History</a></li>
-              <li><a href="#">Sign Out</a></li>
-            </ul>
-          </div>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="active">@Html.ActionLink("Configuration", "", "Configuration", null, null)</li>
-              <li><a href="#">Pricing</a></li>
-              <li><a href="#">Support</a></li>
-            </ul>
-          </div>
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="#">Properties</a>
+                <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="icon-user"></i> @User.Identity.Name
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Profile</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">History</a></li>
+                    <li><a href="#">Sign Out</a></li>
+                </ul>
+                </div>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="active">@Html.ActionLink("Application", "", "Application", null, null)</li>
+                        <li>@Html.ActionLink("Configuration", "", "Configuration", null, null)</li>
+                        <li><a href="http://support.app-properties.net/pricing">Pricing</a></li>
+                        <li><a href="http://support.app-properties.net" target="_blank">Support</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
         @RenderBody()
         <hr>
         <footer>
-            <p>&copy; AppProperties 2012</p>
+            <p>&copy; Properties 2012</p>
         </footer>
     </div>
 
@@ -65,26 +67,7 @@
     @RenderSection("Bottom", false)
     <script type="text/javascript">
         $(function () {
-            // fix sub nav on scroll
-            //http://jsfiddle.net/baptme/ydY6W/
-            var $win = $(window)
-            var $nav = $('.subnav');
-            var navTop = $('.subnav').length && $('.subnav').offset().top - 40;
-            var isFixed = 0;
-            processScroll()
-            $win.on('scroll', processScroll);
-            // hack sad times - holdover until rewrite for 2.1
-            $nav.on('click', function () { if (!isFixed) setTimeout(function () { $win.scrollTop($win.scrollTop() - 47) }, 10) });
-            function processScroll() {
-                var i, scrollTop = $win.scrollTop()
-                if (scrollTop >= navTop && !isFixed) {
-                    isFixed = 1
-                    $nav.addClass('subnav-fixed')
-                } else if (scrollTop <= navTop && isFixed) {
-                    isFixed = 0
-                    $nav.removeClass('subnav-fixed')
-                }
-            }
+            
         });
     </script>
 </body>

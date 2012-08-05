@@ -4,101 +4,61 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Dapper;
+using Properties.Model;
 
 namespace Properties.Web.Controllers
 {
     public class ConfigurationController : Controller
     {
-        public ActionResult Index()
+        private IConfigurationService _configService;
+        public ConfigurationController(IConfigurationService configService)
         {
+            this._configService = configService;
+        }
+
+        public ActionResult Index(string app)
+        {
+            ViewBag.Configurations = new List<Configuration>()
+            {
+                this.CreateTemp("CooperWeb"),
+                this.CreateTemp("AppDemo"),
+                this.CreateTemp("MyApp2"),
+                this.CreateTemp("HelloWorld"),
+                this.CreateTemp("Sample")
+            };
+            return View();
+        }
+        public ActionResult Properties(string app, string name)
+        {
+            ViewBag.Configuration = this.CreateTemp(name);
             return View();
         }
 
-        public ActionResult Properties()
+        private Configuration CreateTemp(string name)
         {
-            return View(); 
+            var c = new Configuration(new Application(new Account(Guid.NewGuid().ToString())), name);
+            c.AddFlag("Debug");
+            c.AddFlag("Test");
+            c.AddFlag("Release");
+            c.AddFlag("Performance");
+            c.AddFlag("Try?");
+            for (var i = 0; i < 50; i++)
+            {
+                var p = c.AddProperty("key-" + i);
+                p.SetDescription("It's a property named " + p.Name);
+                p.Value = "good job, properties dose." + this.GetString(100);
+                p["Debug"] = "Debug value " + this.GetString(100);
+                p["Test"] = "Test value " + this.GetString(100);
+                p["Release"] = "Release value " + this.GetString(100);
+            }
+            return c;
         }
-    }
-}
-
-namespace Properties
-{
-    public class ConfigurationInfo
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DateTime CreateTime { get; set; }
-        public int CreatorId { get; set; }
-    }
-    public class PropertyInfo
-    {
-        private static readonly System.Web.Script.Serialization.JavaScriptSerializer _serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-        private object _lock = new object();
-        private System.Collections.Concurrent.ConcurrentDictionary<string, string> _dict_management;
-        private System.Collections.Concurrent.ConcurrentDictionary<string, string> _dict_release;
-        public string Name { get; set; }
-        public string ManagementValueString { get; set; }
-        public string ReleaseValueString { get; set; }
-        public string Value { get; set; }
-
-        public string ManagementValue(string flag)
+        private string GetString(int length)
         {
-            this.PrepareManagement();
-            return this._dict_management.GetOrAdd(flag, string.Empty);
-        }
-        public void ManagementValue(string flag, string value)
-        {
-            this.PrepareManagement();
-            this._dict_management.AddOrUpdate(flag, value, (k, v) => value);
-        }
-        public string ReleaseValue(string flag)
-        {
-            this.PrepareRelease();
-            return this._dict_release.GetOrAdd(flag, string.Empty);
-        }
-        public void ReleaseValue(string flag, string value)
-        {
-            this.PrepareRelease();
-            this._dict_release.AddOrUpdate(flag, value, (k, v) => value);
-        }
-
-        public void Commit()
-        {
-            this.ReleaseValueString = this.ManagementValueString;
-            lock (this._lock)
-                this._dict_release = null;
-        }
-        private void PrepareManagement()
-        {
-            if (this._dict_management != null) return;
-            lock (this._lock)
-                if (this._dict_management == null)
-                    this._dict_management = _serializer.Deserialize<System.Collections.Concurrent.ConcurrentDictionary<string, string>>(this.ManagementValueString);
-        }
-        private void PrepareRelease()
-        {
-            if (this._dict_release != null) return;
-            lock (this._lock)
-                if (this._dict_release == null)
-                    this._dict_release = _serializer.Deserialize<System.Collections.Concurrent.ConcurrentDictionary<string, string>>(this.ReleaseValueString);
-        }
-    }
-    public class Account
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public DateTime CreateTime { get; set; }
-    }
-    public static class SqlHelper
-    {
-        public static IEnumerable<ConfigurationInfo> GetConfigurations(Account account)
-        {
-            using (var conn = Connection())
-                return conn.Query<ConfigurationInfo>("select CreatorId=@id", new { id = account.ID });
-        }
-        private static System.Data.Common.DbConnection Connection()
-        {
-            return new System.Data.SqlClient.SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["propertis"].ToString());
+            var str = "";
+            for (var i = 0; i < length; i++)
+                str += "K";
+            return str;
         }
     }
 }
