@@ -13,9 +13,9 @@ Make configuration easier :)
 
 - screenshoots
 
-![configuration](/screenshoots/configuration.png)
+![configuration](screenshoots/configuration.png)
 
-![configuration](/screenshoots/properties.png)
+![configuration](screenshoots/properties.png)
 
 ## Format
 
