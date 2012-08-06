@@ -14,7 +14,8 @@
 <div class="row">
 @foreach(var a in apps)
 {
-    <div class="span2 alert alert-success">
+    <div class="span2 well">
+        <i class="icon-th-large"></i>
         <strong>@Html.ActionLink(a.Name, a.ID.ToString())</strong>
         @a.CreateTime.ToString("yyyy/M/d")
     </div>

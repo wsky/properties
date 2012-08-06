@@ -10,14 +10,15 @@
     active = url.IndexOf("/setting") >= 0 ? 3 : active;
 }
 <div class="btn-group">
-    <button class="btn btn-large btn-inverse dropdown-toggle" data-toggle="dropdown">
+    <button class="btn btn-large dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-th-large"></i>
         @app.Name
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
         @foreach (var a in apps)
         {
-        <li><a href="@Url.App(a)">@a.Name</a></li>
+        <li><a href="@Url.App(a)" title="create at @a.CreateTime"><span class="label label-info">@a.ID</span> @a.Name</a></li>
         }
     </ul>
 </div>

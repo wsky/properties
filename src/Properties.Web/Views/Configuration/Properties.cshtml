@@ -17,10 +17,12 @@
             max-height:50px;
             word-break:break-all;
         }
-        div.row div.span3 a{ text-decoration:none; color:#232323}
+        div.row div.span2{ cursor:pointer;}
+        div.row div.span2 a{ text-decoration:none; color:#232323}
         .pop-title{ color:#d14;}
         .pop-content{ line-height:25px; word-break:break-all}
-        form textarea{ height:100px; width:95%}
+        div.modal form textarea{ height:100px; width:95%}
+        div.modal form input{ width:95%}
     </style>
 }
 <header>
@@ -39,13 +41,13 @@
             </a>
         </div>
         <div class="btn-group">
-            <a class="btn" href="#">
+            <button class="btn btn-success">
                 <i class="icon-upload"></i>
                 Commit All
-            </a>
+            </button>
         </div>
         <div class="btn-group">
-            <a class="btn btn-danger" href="#">
+            <a class="btn btn-danger" href="#edit_drop" data-toggle="modal">
                 <i class="icon-trash"></i>
                 Drop Configuration
             </a>
@@ -73,11 +75,11 @@
         <div class="row">
             @for (var j = 0; j < c.Properties.Count(); j++)
             {
-                if (j == 20) { break; }
                 var p = c.GetProperty(c.Properties.ElementAt(j));
-                <div class="span2 well" 
-                data-original-title="<span class='pop-title'>@p.Name</span>" 
-                data-content="
+                <div class="span2 well"
+                    id="@p.Name"
+                    data-original-title="<span class='pop-title'>@p.Name</span>" 
+                    data-content="
                     <div class='pop-content'>
                         @for (var i = 0; i < c.Flags.Count(); i++)
                         {
@@ -85,7 +87,7 @@
                             <div>@p[c.Flags.ElementAt(i)]</div>
                         }
                     </div>
-                    "> <a href="@Url.Action("Properties/" + c.Name)"><code>@p.Name</code>
+                    "> <a href="#@p.Name"><code>@p.Name</code>
                         @p.Description
                         <p>
                             @p.Value
@@ -138,26 +140,18 @@
             Edit Configuration</h3>
     </div>
     <div class="modal-body">
-        <form>
-            <textarea name="content" placeholder="property value"></textarea>
+        @using (Html.BeginForm())
+        {
+            <textarea name="description" placeholder="Configuration Description"></textarea>
             <br />
-            <span class="label label-info">Debug</span>
+            <span class="label">Flags</span>
             <br />
-            <textarea name="content" placeholder="property value"></textarea>
-            <br />
-            <span class="label label-warning">Test</span>
-            <br />
-            <textarea name="content" placeholder="property value"></textarea>
-            <br />
-            <span class="label label-success">Release</span>
-            <br />
-            <textarea name="content" placeholder="property value"></textarea>
-            <br />
-        </form>
+            <input type="text" maxlength="100" placeholder="Multiple options separated by commas ','" />
+        }
     </div>
     <div class="modal-footer">
         <a class="btn" data-dismiss="modal">Cancel</a> 
-        <a class="btn btn-primary" onclick="doFeedback()">Done</a>
+        <button type="submit" name="btn" class="btn btn-primary">Done</button>
     </div>
 </div>
 <div class="modal hide" id="edit_property">
@@ -168,33 +162,52 @@
             Edit Property</h3>
     </div>
     <div class="modal-body">
-        <form>
-            <textarea name="content" placeholder="property value"></textarea>
+        @using (Html.BeginForm())
+        {
+            <label>Value:</label>
+            <textarea name="value" placeholder="Property value"></textarea>
             <br />
-            <span class="label label-info">Debug</span>
+            <label>Description:</label>
+            <textarea name="description" placeholder="Property description"></textarea>
             <br />
-            <textarea name="content" placeholder="property value"></textarea>
-            <br />
-            <span class="label label-warning">Test</span>
-            <br />
-            <textarea name="content" placeholder="property value"></textarea>
-            <br />
-            <span class="label label-success">Release</span>
-            <br />
-            <textarea name="content" placeholder="property value"></textarea>
-            <br />
-        </form>
+            for (var i = 0; i < c.Flags.Count(); i++)
+            { 
+                <span class="label @label[i % 5]">@c.Flags.ElementAt(i)</span>
+                <br />
+                <textarea name="@c.Flags.ElementAt(i)" placeholder="Property value at @c.Flags.ElementAt(i) flag"></textarea>   
+                <br />
+            }
+        }
     </div>
     <div class="modal-footer">
         <a class="btn" data-dismiss="modal">Cancel</a> 
-        <a class="btn btn-primary" onclick="doFeedback()">Done</a>
+        <button type="submit" name="btn" class="btn btn-primary">Done</button>
     </div>
 </div>
-
+<div class="modal hide" id="edit_drop">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+            ×</button>
+        <h3>
+            Drop Configuration ?</h3>
+    </div>
+    <div class="modal-body">
+        @using (Html.BeginForm())
+        {
+            <p class="alert alert-error">
+                <strong>Confirm?</strong>
+            </p>
+        }
+    </div>
+    <div class="modal-footer">
+        <a class="btn" data-dismiss="modal">Cancel</a> 
+        <button type="submit" name="btn" class="btn btn-danger">Drop it</button>
+    </div>
+</div>
 @section Bottom{
     <script type="text/javascript">
         $(function () {
-            $('div.span3').popover().click(function () { $('#edit_property').modal('show'); });
+            $('div.span2').popover().click(function () { $('#edit_property').modal('show'); });
         });
         function check() {
             var b = $.trim($('input[name="name"]').val()) != '';

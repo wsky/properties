@@ -40,14 +40,15 @@
 }
 <header class="jumbotron subhead" id="overview">
     <div class="btn-group">
-        <button class="btn btn-large btn-inverse dropdown-toggle" data-toggle="dropdown">
+        <button class="btn btn-large dropdown-toggle" data-toggle="dropdown">
+            <i class="icon-th-large"></i>
             @app.Name
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
             @foreach (var a in apps)
             {
-            <li><a href="@Url.AppConfigs(a)">@a.Name</a></li>
+            <li><a href="@Url.AppConfigs(a)" title="create at @a.CreateTime"><span class="label label-info">@a.ID</span> @a.Name</a></li>
             }
         </ul>
     </div>
@@ -71,7 +72,7 @@
             <ul class="nav nav-pills">
                 @foreach (var c in all)
                 {
-                    <li><a href="#@c.Name"><i class="icon-list-alt"></i>@c.Name</a></li>
+                    <li><a href="#@c.Name"><i class="icon-list-alt"></i> @c.Name</a></li>
                 }
             </ul>
         </div>
