@@ -18,12 +18,12 @@ namespace Properties.Web.Controllers
             this._sysConfig_versionFlag = sysConfig_versionFlag;
         }
 
-        public ActionResult LogOn()
+        public ActionResult Login()
         {
             return View();
         }
         [HttpPost]
-        public ActionResult LogOn(string username, string password)
+        public ActionResult Login(string username, string password)
         {
             var a = this._accountService.GetAccount(username);
             var skip = this._sysConfig_versionFlag != "Release";
@@ -34,6 +34,12 @@ namespace Properties.Web.Controllers
                 FormsAuthentication.RedirectFromLoginPage(username, true);
 
             return View();
+        }
+
+        public ActionResult SignOut()
+        {
+            FormsAuthentication.SignOut();
+            return Redirect(FormsAuthentication.LoginUrl);
         }
     }
 }

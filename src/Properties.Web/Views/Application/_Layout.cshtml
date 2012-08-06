@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var apps = ViewBag.Apps as IEnumerable<Properties.Model.Application>;
+    var app = ViewBag.App as Properties.Model.Application;
+
+    var url = Request.Url.ToString().ToLower();
+    var active = 0;
+    active = url.IndexOf("/share") >= 0 ? 1 : active;
+    active = url.IndexOf("/integrate") >= 0 ? 2 : active;
+    active = url.IndexOf("/setting") >= 0 ? 3 : active;
+}
+<div class="btn-group">
+    <button class="btn btn-large btn-inverse dropdown-toggle" data-toggle="dropdown">
+        @app.Name
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        @foreach (var a in apps)
+        {
+        <li><a href="@Url.App(a)">@a.Name</a></li>
+        }
+    </ul>
+</div>
+
+<hr />
+
+<div class="tabbable tabs-left">
+    <ul class="nav nav-tabs">
+        <li><a href="@Url.Action("Usage")"><i class="icon-shopping-cart"></i> Usage</a></li>
+        <li><a href="@Url.Action("Share")"><i class="icon-eye-open"></i> Share</a></li>
+        <li><a href="@Url.Action("Integrate")"><i class="icon-random"></i> Integrate</a></li>
+        <li><a href="@Url.Action("Setting")"><i class="icon-cog"></i> Setting</a></li>
+    </ul>
+    <div class="tab-content">
+        @RenderBody()
+    </div>
+</div>
+
+@section Bottom{
+    <script type="text/javascript">
+        $(function () {
+            $('div.tabbable .nav-tabs li:eq(@active)').addClass('active');
+        });
+    </script>
+}

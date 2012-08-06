@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "LogOn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Head{
+    <style type="text/css">
+        form {
+            color: #808080;
+        }
+        form .btn-success {
+            width: 75%;
+        }
+    </style>
+}
+<div class="container well" style="background-color: #fff; border: 1px #ccc solid; max-width: 450px;">
+    <h2>
+        LOGIN
+    </h2>
+    <div>
+        <form class="form-horizontal">
+        <fieldset>
+            <div class="control-group">
+                <label class="control-label">
+                </label>
+                <div class="controls">
+                    <button type="button" class="btn btn-success" onclick="window.open('@ViewBag.GoogleUrl')">
+                        Log In with Google Account</button>
+                </div>
+            </div>
+        </fieldset>
+        </form>
+    </div>
+    <div style="border-top: 1px #c0ccd7 solid; margin: 30px; position: relative">
+        <div style="position: absolute; top: -8px; left: 38%; color: #c0ccd7; padding: 0 16px;
+            background-color: #fff; font-size: 11px">
+            OR
+        </div>
+    </div>
+    <div>
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label">
+                        Account</label>
+                    <div class="controls">
+                        <input type="text" name="username" value="wsky">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Password</label>
+                    <div class="controls">
+                        <input type="password" name="password" value="1">
+                        <p class="help-block">
+                            forget password?</p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                    </label>
+                    <div class="controls">
+                        <button type="submit" class="btn btn-info" onclick="
+                                var u=$('input[name=username]').val()!='';
+                                var p=$('input[name=password]').val()!='';
+                                $('.control-group').eq(1)[u?'removeClass':'addClass']('error');
+                                $('.control-group').eq(2)[p?'removeClass':'addClass']('error');
+                                return u&&p;">
+                            Log In</button>
+                    </div>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+@section Bottom{
+}

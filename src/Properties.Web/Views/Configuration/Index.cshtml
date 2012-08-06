@@ -1,6 +1,8 @@
 ﻿@{
     ViewBag.Title = "Configuration Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var apps = ViewBag.Apps as IEnumerable<Properties.Model.Application>;
+    var app = ViewBag.App as Properties.Model.Application;
     var all = ViewBag.Configurations as IEnumerable<Properties.Model.Configuration>;
     var label = new string[] { "label-success", "label-warning", "label-important", "label-info", "label-inverse" };
 }
@@ -39,10 +41,14 @@
 <header class="jumbotron subhead" id="overview">
     <div class="btn-group">
         <button class="btn btn-large btn-inverse dropdown-toggle" data-toggle="dropdown">
-            Application <span class="caret"></span>
+            @app.Name
+            <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li><a>app</a></li>
+            @foreach (var a in apps)
+            {
+            <li><a href="@Url.AppConfigs(a)">@a.Name</a></li>
+            }
         </ul>
     </div>
     <hr />
@@ -51,25 +57,32 @@
     </h1>
     <p class="lead">
     </p>
-    <div class="input-append">
-        <input type="text" placeholder="configuration name" /><button class="btn"><i class="icon-plus"></i>&nbsp;New Configuration</button>
-    </div>
+    @using (Html.BeginForm())
+    {
+        <div class="input-append control-group">
+            @Html.Hidden("appId", app.ID)
+            <input type="text" name="name" placeholder="configuration name" /><button type="submit" class="btn" onclick="return check()"><i class="icon-plus"></i>&nbsp;New Configuration</button>
+        </div>
+    }
     <br />
-    <div class="subnav">
-        <ul class="nav nav-pills">
-            @foreach (var c in all)
-            {
-                <li><a href="#@c.Name"><i class="icon-list-alt"></i>@c.Name</a></li>
-            }
-        </ul>
-    </div>
+    @if (all.Count() > 0)
+    {
+        <div class="subnav">
+            <ul class="nav nav-pills">
+                @foreach (var c in all)
+                {
+                    <li><a href="#@c.Name"><i class="icon-list-alt"></i>@c.Name</a></li>
+                }
+            </ul>
+        </div>
+    }
 </header>
 @foreach (var c in all)
 {
     <section id="@c.Name">
         <div class="page-header">
             <h2>
-                @Html.ActionLink(c.Name, "Properties/" + c.Name)
+                <a href="@Url.Config(c)">@c.Name</a>
                 <small>@c.Description</small>
                 @for (var i = 0; i < c.Flags.Count(); i++)
                 { 
@@ -92,7 +105,7 @@
                             <div>@p[c.Flags.ElementAt(i)]</div>
                         }
                     </div>
-                    "> <a href="@Url.Action("Properties/" + c.Name)"><code>@p.Name</code>
+                    "> <a href="@string.Concat(Url.Config(c), "#", c.Name)"><code>@p.Name</code>
                         @p.Description
                         <p>
                             @p.Value
@@ -101,7 +114,7 @@
                 </div>
             }
         </div>
-        @Html.ActionLink(">> More", "Properties/" + c.Name)
+        <a href="@Url.Config(c)">>> More</a>
     </section>
 }
 @section Bottom{
@@ -130,5 +143,11 @@
                 }
             }
         });
+
+        function check() {
+            var b = $.trim($('input[name="name"]').val()) != '';
+            $('.control-group')[b ? 'removeClass' : 'addClass']('error');
+            return b;
+        }
     </script>
 }

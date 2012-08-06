@@ -10,27 +10,50 @@ namespace Properties.Web.Controllers
 {
     public class ConfigurationController : Controller
     {
+        private IContextService _context;
+        private IApplicationService _appService;
         private IConfigurationService _configService;
-        public ConfigurationController(IConfigurationService configService)
+        public ConfigurationController(IContextService context
+            , IApplicationService appService
+            , IConfigurationService configService)
         {
+            this._context = context;
+            this._appService = appService;
             this._configService = configService;
         }
 
-        public ActionResult Index(string app)
+        public ActionResult Index(string appId)
         {
-            ViewBag.Configurations = new List<Configuration>()
-            {
-                this.CreateTemp("CooperWeb"),
-                this.CreateTemp("AppDemo"),
-                this.CreateTemp("MyApp2"),
-                this.CreateTemp("HelloWorld"),
-                this.CreateTemp("Sample")
-            };
+            Guid id;
+            Guid.TryParse(appId, out id);
+            var apps = this._appService.GetApps(this._context.Current);
+            var a = Guid.TryParse(appId, out id)
+                ? apps.FirstOrDefault(o => o.ID == id)
+                : apps.FirstOrDefault();
+            ViewBag.Apps = apps;
+            ViewBag.App = a;
+            ViewBag.Configurations = this._configService.GetConfigurations(a);
             return View();
         }
-        public ActionResult Properties(string app, string name)
+        [HttpPost]
+        public ActionResult Index(string appId, string name)
         {
-            ViewBag.Configuration = this.CreateTemp(name);
+            var app = this.GetApp(appId);
+            this._configService.Create(new Configuration(app, name));
+            return Redirect(Url.AppConfigs(app));
+        }
+        public ActionResult Properties(string id)
+        {
+            ViewBag.Configuration = this.GetConfig(id);
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Properties(string id, string name)
+        {
+            var c = this.GetConfig(id);
+            c.AddProperty(name);
+            this._configService.Update(c);
+            ViewBag.Configuration = c;
             return View();
         }
 
@@ -59,6 +82,31 @@ namespace Properties.Web.Controllers
             for (var i = 0; i < length; i++)
                 str += "K";
             return str;
+        }
+        private Configuration GetConfig(string id)
+        {
+            Guid configId;
+            Guid.TryParse(id, out configId);
+            var c = this._configService.GetConfiguration(configId);
+            if (c != null)
+                this.GetApp(c.AppId);
+            return c;
+        }
+        private Application GetApp(string id)
+        {
+            Guid appId;
+            Guid.TryParse(id, out appId);
+            return this.GetApp(appId);
+        }
+        private Application GetApp(Guid id)
+        {
+            var app = this._appService.GetApp(id);
+            ViewBag.App = app;
+            if (app == null)
+                throw new KnownException("Application Not Found");
+            if (app.CreatorAccountId != this._context.Current.ID)
+                throw new KnownException("Donot Have Permission");
+            return app;
         }
     }
 }

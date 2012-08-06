@@ -34,7 +34,6 @@
   <!--NUnit-->
   <property name="nunit" value="${path::get-full-path(dir.tools)}\nunit\nunit-console.exe" />
   
-  <!--clean-->
   <target name="clean" description="clean build folder">
     <delete dir="${build.absolutepath}"></delete>
   </target>
@@ -49,25 +48,25 @@
   <target name="web">
     <exec program="${msbuild}"
           commandline="${msbuild.params} 
-          ${msbuild.params.mvcoutput}\cooper_web
-          ${msbuild.params.output}\cooper_web\bin"
-          workingdir="${dir}\src\Cooper.Web" />
-    <xmlpoke file="${build.absolutepath}\cooper_web\web.config"
+          ${msbuild.params.mvcoutput}\properties_web
+          ${msbuild.params.output}\properties_web\bin"
+          workingdir="${dir}\src\Properties.Web" />
+    <xmlpoke file="${build.absolutepath}\properties_web\web.config"
              xpath="${xpath.flag}"
              value="${project.config}" />
-    <xmlpoke file="${build.absolutepath}\cooper_web\web.config"
+    <xmlpoke file="${build.absolutepath}\properties_web\web.config"
              xpath="${xpath.flag_refresh}"
              value="true" />
     <if test="${msbuild.config=='Release'}">
-      <xmlpoke file="${build.absolutepath}\cooper_web\web.config" 
+      <xmlpoke file="${build.absolutepath}\properties_web\web.config" 
                xpath="${xpath.compilation}"
                value="false" />
-      <xmlpoke file="${build.absolutepath}\cooper_web\web.config"
+      <xmlpoke file="${build.absolutepath}\properties_web\web.config"
                xpath="${xpath.customErrors}"
                value="RemoteOnly" />
     </if>
     <!--change scripts-->
-    <echo file="${build.absolutepath}\cooper_web\scripts\common.js" append="true" if="${msbuild.config=='Release'}">
+    <echo file="${build.absolutepath}\properties_web\scripts\common.js" append="true" if="${msbuild.config=='Release'}">
       <![CDATA[
 debuger.isProfileEnable = debuger.enable && false;
 debuger.isDebugEnable = debuger.enable && false;
@@ -77,30 +76,18 @@ debuger.isErrorEnable = debuger.enable && true;
       ]]>
     </echo>
     <!--compress-->
-    <yuicompressor todir="${build.absolutepath}\cooper_web\scripts\">
-      <fileset basedir="${build.absolutepath}\cooper_web\scripts\">
+    <!--<yuicompressor todir="${build.absolutepath}\properties_web\scripts\">
+      <fileset basedir="${build.absolutepath}\properties_web\scripts\">
         <include name="common.js" />
-        <include name="task.js" />
-        <include name="task_common.js" />
-        <include name="task_priority.js" />
-        <include name="task_due.js" />
-        <include name="account.js" />
-        <include name="mobile.js" />
       </fileset>
-    </yuicompressor>
-    <yuicompressor todir="${build.absolutepath}\cooper_web\content\css">
-      <fileset basedir="${build.absolutepath}\cooper_web\content\css">
-        <include name="task.css" />
-      </fileset>
-    </yuicompressor>
-    <!--hybrid-->
+    </yuicompressor>-->
   </target>
   
   <target name="test_model">
     <exec program="${msbuild}"
-          commandline="${msbuild.params} ${msbuild.params.output}\cooper_model_test"
-          workingdir="${dir}\src\Cooper.Model.Test" />
-    <exec program="${nunit}" commandline="Cooper.Model.Test.dll" workingdir="${build.absolutepath}\cooper_model_test"/>
+          commandline="${msbuild.params} ${msbuild.params.output}\properties_model_test"
+          workingdir="${dir}\src\Properties.Model.Test" />
+    <exec program="${nunit}" commandline="Properties.Model.Test.dll" workingdir="${build.absolutepath}\properties_model_test"/>
     <!--/exclude=concurrent-->
   </target>
 </project>

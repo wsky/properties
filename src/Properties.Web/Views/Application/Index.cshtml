@@ -4,24 +4,29 @@
     var apps = ViewBag.Apps as IEnumerable<Properties.Model.Application>;
 }
 
-<div class="btn-group">
-    <button class="btn btn-large btn-inverse dropdown-toggle" data-toggle="dropdown">Action
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-        <li><a>app</a></li>
-    </ul>
+@using (Html.BeginForm("Create", "Application"))
+{
+<div class="control-group input-append">
+    <input type="text" name="name" placeholder="application name" /><button type="submit" class="btn" onclick="return check()"><i class="icon-plus"></i>&nbsp;New Application</button>
 </div>
-<hr />
-<div class="tabbable tabs-left">
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="#setting">Setting</a></li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#">Share</a></li>
-    <li><a href="#">Integrate</a></li>
-  </ul>
-  <div class="tab-content">
-    <div id="setting"></div>
-    <div id="usage"></div>
-  </div>
+}
+
+<div class="row">
+@foreach(var a in apps)
+{
+    <div class="span2 alert alert-success">
+        <strong>@Html.ActionLink(a.Name, a.ID.ToString())</strong>
+        @a.CreateTime.ToString("yyyy/M/d")
+    </div>
+}
 </div>
+
+@section Bottom{
+<script type="text/javascript">
+    function check() {
+        var b = $.trim($('input[name="name"]').val()) != '';
+        $('.control-group')[b ? 'removeClass' : 'addClass']('error');
+        return b;
+    }
+</script>
+}

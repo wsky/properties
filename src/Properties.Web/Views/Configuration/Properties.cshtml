@@ -1,6 +1,9 @@
 ﻿@{
     ViewBag.Title = "Table";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var label = new string[] { "label-success", "label-warning", "label-important", "label-info", "label-inverse" };
+    var app = ViewBag.App as Properties.Model.Application;
+    var c = ViewBag.Configuration as Properties.Model.Configuration;
 }
 
 @section Head{
@@ -22,11 +25,12 @@
 }
 <header>
     <h1>
-        Table</h1>
-    <p class="lead">xxxxx
-    <span class="label label-info">Debug</span>
-    <span class="label label-warning">Test</span>
-    <span class="label label-success">Release</span>
+        @c.Name</h1>
+    <p class="lead">@c.Description
+    @for (var i = 0; i < c.Flags.Count(); i++)
+    { 
+        <span class="label @label[i % 5]">@c.Flags.ElementAt(i)</span>    
+    }
     <div class="btn-toolbar">
         <div class="btn-group">
             <a class="btn" href="#edit_config" data-toggle="modal">
@@ -51,7 +55,7 @@
 
     <div class="alert">PS: you must committed changes after updating properties. </div>
 </header>
-<div class="tabbable"> <!-- Only required for left/right tabs -->
+<div class="tabbable">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#tab1" data-toggle="tab">Properties</a></li>
     <li><a href="#tab2" data-toggle="tab">uncommited</a></li>
@@ -59,27 +63,37 @@
   </ul>
   <div class="tab-content">
     <div class="tab-pane active" id="tab1">
-        <div class="row">
-            <div class="span3 well" 
-            data-original-title="<span class='pop-title'>key</span>" 
-            data-content="
-            <div class='pop-content'>
-            <span class='label label-info'>Debug</span>
-            <div>abcd11111111111111111111111111111111111</div>
-            <span class='label label-warning'>Test</span>
-            <div>abcd11111111111111111111111111111111111</div>
-            <span class='label label-success'>Release</span>
-            <div>abcd11111111111111111111111111111111111</div>
+        @using (Html.BeginForm())
+        {
+            <div class="input-append control-group">
+                @Html.Hidden("id", c.ID)
+                <input type="text" name="name" placeholder="property name" /><button type="submit" class="btn" onclick="return check()"><i class="icon-plus"></i>&nbsp;New Property</button>
             </div>
-            ">
-            <a href="#">
-            <code>key</code>
-            <p>
-            1111111111111111111111111111111111111111111111111
-            </p>
-            </a>
+        }
+        <div class="row">
+            @for (var j = 0; j < c.Properties.Count(); j++)
+            {
+                if (j == 20) { break; }
+                var p = c.GetProperty(c.Properties.ElementAt(j));
+                <div class="span2 well" 
+                data-original-title="<span class='pop-title'>@p.Name</span>" 
+                data-content="
+                    <div class='pop-content'>
+                        @for (var i = 0; i < c.Flags.Count(); i++)
+                        {
+                            <span class='label @label[i % 5]'>@c.Flags.ElementAt(i)</span>
+                            <div>@p[c.Flags.ElementAt(i)]</div>
+                        }
+                    </div>
+                    "> <a href="@Url.Action("Properties/" + c.Name)"><code>@p.Name</code>
+                        @p.Description
+                        <p>
+                            @p.Value
+                        </p>
+                    </a>
+                </div>
+            }
         </div>
-    </div>
     </div>
     <div class="tab-pane" id="tab2">
         <ul class="nav nav-tabs nav-stacked">
@@ -182,5 +196,10 @@
         $(function () {
             $('div.span3').popover().click(function () { $('#edit_property').modal('show'); });
         });
+        function check() {
+            var b = $.trim($('input[name="name"]').val()) != '';
+            $('.control-group')[b ? 'removeClass' : 'addClass']('error');
+            return b;
+        }
     </script>
 }
