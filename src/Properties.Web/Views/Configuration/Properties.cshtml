@@ -4,6 +4,7 @@
     var label = new string[] { "label-success", "label-warning", "label-important", "label-info", "label-inverse" };
     var app = ViewBag.App as Properties.Model.Application;
     var c = ViewBag.Configuration as Properties.Model.Configuration;
+    var properties = new List<Properties.Model.Property>();
 }
 
 @section Head{
@@ -17,17 +18,17 @@
             max-height:50px;
             word-break:break-all;
         }
-        div.row div.span2{ cursor:pointer;}
-        div.row div.span2 a{ text-decoration:none; color:#232323}
-        .pop-title{ color:#d14;}
-        .pop-content{ line-height:25px; word-break:break-all}
-        div.modal form textarea{ height:100px; width:95%}
-        div.modal form input{ width:95%}
+        div.row div.span2 { cursor:pointer;}
+        div.row div.span2 a { text-decoration:none; color:#232323 }
+        .pop-title { color:#d14; }
+        .pop-content { line-height:25px; word-break:break-all }
+        div.modal form textarea { height:100px; width:95% }
+        div.modal form input { width:95%}
+        div.modal form { margin:0; padding:0 }
     </style>
 }
 <header>
-    <h1>
-        @c.Name</h1>
+    <h1><a href="@Url.Config(c)">@c.Name</a></h1>
     <p class="lead">@c.Description
     @for (var i = 0; i < c.Flags.Count(); i++)
     { 
@@ -76,8 +77,10 @@
             @for (var j = 0; j < c.Properties.Count(); j++)
             {
                 var p = c.GetProperty(c.Properties.ElementAt(j));
+                properties.Add(p);
                 <div class="span2 well"
                     id="@p.Name"
+                    onclick="edit('@p.Name')"
                     data-original-title="<span class='pop-title'>@p.Name</span>" 
                     data-content="
                     <div class='pop-content'>
@@ -132,83 +135,110 @@
   </div>
 </div>
 
+<div class="modal hide" id="edit_drop">
+    @using (Html.BeginForm())
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                ×</button>
+            <h3>
+                Drop Configuration ?</h3>
+        </div>
+        <div class="modal-body">
+            <p class="alert alert-error">
+                <strong>Confirm?</strong>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a class="btn" data-dismiss="modal">Cancel</a> 
+            <button type="submit" name="btn" value="DropConfiguration" class="btn btn-danger">Drop it</button>
+            @Html.Hidden("id", c.ID)
+        </div>
+    }
+</div>
 <div class="modal hide" id="edit_config">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">
-            ×</button>
-        <h3>
-            Edit Configuration</h3>
-    </div>
-    <div class="modal-body">
-        @using (Html.BeginForm())
-        {
-            <textarea name="description" placeholder="Configuration Description"></textarea>
+    @using (Html.BeginForm())
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                ×</button>
+            <h3>
+                Edit Configuration</h3>
+        </div>
+        <div class="modal-body">
+            @Html.TextArea("description", c.Description, new { placeholder = "Configuration Description" })
             <br />
             <span class="label">Flags</span>
             <br />
-            <input type="text" maxlength="100" placeholder="Multiple options separated by commas ','" />
-        }
-    </div>
-    <div class="modal-footer">
-        <a class="btn" data-dismiss="modal">Cancel</a> 
-        <button type="submit" name="btn" class="btn btn-primary">Done</button>
-    </div>
+            <input name="flags" value="@string.Join(",", c.Flags)" type="text" maxlength="100" placeholder="Multiple options separated by commas ','" />
+        </div>
+        <div class="modal-footer">
+            <a class="btn" data-dismiss="modal">Cancel</a> 
+            <button type="submit" name="btn" value="UpdateConfiguration" class="btn btn-primary">Done</button>
+            @Html.Hidden("id", c.ID)
+        </div>
+    }
 </div>
 <div class="modal hide" id="edit_property">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">
-            ×</button>
-        <h3>
-            Edit Property</h3>
-    </div>
-    <div class="modal-body">
-        @using (Html.BeginForm())
-        {
+     @using (Html.BeginForm())
+     {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                ×</button>
+            <h3>
+                Edit Property <code id="name"></code></h3>
+        </div>
+        <div class="modal-body">
             <label>Value:</label>
             <textarea name="value" placeholder="Property value"></textarea>
             <br />
             <label>Description:</label>
             <textarea name="description" placeholder="Property description"></textarea>
             <br />
-            for (var i = 0; i < c.Flags.Count(); i++)
+            @for (var i = 0; i < c.Flags.Count(); i++)
             { 
                 <span class="label @label[i % 5]">@c.Flags.ElementAt(i)</span>
                 <br />
-                <textarea name="@c.Flags.ElementAt(i)" placeholder="Property value at @c.Flags.ElementAt(i) flag"></textarea>   
+                <textarea name="flag_@c.Flags.ElementAt(i)" placeholder="Property value at @c.Flags.ElementAt(i) flag"></textarea>   
                 <br />
             }
-        }
-    </div>
-    <div class="modal-footer">
-        <a class="btn" data-dismiss="modal">Cancel</a> 
-        <button type="submit" name="btn" class="btn btn-primary">Done</button>
-    </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn" data-dismiss="modal">Cancel</a> 
+            <button type="submit" name="btn" value="UpdateProperty" class="btn btn-primary">Done</button>
+            @Html.Hidden("name")
+            @Html.Hidden("id", c.ID)
+        </div>
+    }
 </div>
-<div class="modal hide" id="edit_drop">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">
-            ×</button>
-        <h3>
-            Drop Configuration ?</h3>
-    </div>
-    <div class="modal-body">
-        @using (Html.BeginForm())
-        {
-            <p class="alert alert-error">
-                <strong>Confirm?</strong>
-            </p>
-        }
-    </div>
-    <div class="modal-footer">
-        <a class="btn" data-dismiss="modal">Cancel</a> 
-        <button type="submit" name="btn" class="btn btn-danger">Drop it</button>
-    </div>
-</div>
+
 @section Bottom{
+    @{
+        var temp = properties.Select(o => new
+        {
+            name = o.Name,
+            description = o.Description,
+            value = o.Value,
+            flagValues = c.Flags.Select(p => new KeyValuePair<string, string>(p, o[p])).ToDictionary(p => p.Key, p => p.Value)
+        }).ToDictionary(o => o.name, o => o);
+    }
+    <script type="text/javascript">
+        var propertis = @Html.Raw(new CodeSharp.Core.Utils.Serializer().JsonSerialize(temp));
+    </script>
     <script type="text/javascript">
         $(function () {
-            $('div.span2').popover().click(function () { $('#edit_property').modal('show'); });
+            $('div.span2').popover();
         });
+        function edit(n) {
+            var p = propertis[n];
+            $('#edit_property #name').html(p.name);
+            $('#edit_property input[name="name"]').val(p.name);
+            $('#edit_property textarea[name="value"]').val(p.value);
+            $('#edit_property textarea[name="description"]').val(p.description);
+            for (var k in p.flagValues)
+                $('#edit_property textarea[name="flag_' + k + '"]').val(p.flagValues[k]);
+            $('#edit_property').modal('show');
+        }
         function check() {
             var b = $.trim($('input[name="name"]').val()) != '';
             $('.control-group')[b ? 'removeClass' : 'addClass']('error');

@@ -42,19 +42,67 @@ namespace Properties.Web.Controllers
             this._configService.Create(new Configuration(app, name));
             return Redirect(Url.AppConfigs(app));
         }
+
         public ActionResult Properties(string id)
         {
             ViewBag.Configuration = this.GetConfig(id);
             return View();
         }
         [HttpPost]
-        public ActionResult Properties(string id, string name)
+        public ActionResult Properties(string btn
+            , string id, string name
+            , string description, string flags
+            , string value
+            , FormCollection formValues)
+        {
+            switch (btn)
+            {
+                case "UpdateConfiguration":
+                    this.UpdateConfiguration(id, description, flags);
+                    break;
+                case "DropConfiguration":
+                    this.DropConfiguration(id);
+                    break;
+                case "UpdateProperty":
+                    this.UpdateProperty(id, name, description, value, formValues);
+                    break;
+                case "DropProperty":
+                    this.DropProperty(id, name);
+                    break;
+                default:
+                    var c = this.GetConfig(id);
+                    c.AddProperty(name);
+                    this._configService.Update(c);
+                    ViewBag.Configuration = c;
+                    break;
+            }
+            return this.Properties(id);
+        }
+
+        public void UpdateConfiguration(string id, string description, string flags)
         {
             var c = this.GetConfig(id);
-            c.AddProperty(name);
+            c.SetDescription(description);
+            flags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().ForEach(o => { if (!c.Flags.Contains(o)) c.AddFlag(o); });
             this._configService.Update(c);
-            ViewBag.Configuration = c;
-            return View();
+        }
+        public void DropConfiguration(string id)
+        {
+
+        }
+        public void UpdateProperty(string id, string name, string description, string value, FormCollection formValues)
+        {
+            var c = this.GetConfig(id);
+            var p = c.GetProperty(name);
+            p.SetDescription(description);
+            p.Value = value;
+            foreach (var f in c.Flags)
+                p[f] = formValues["flag_" + f];
+            this._configService.Update(c);
+        }
+        public void DropProperty(string id, string name)
+        {
+
         }
 
         private Configuration CreateTemp(string name)
