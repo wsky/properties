@@ -166,6 +166,7 @@ namespace Properties.Model.Test
             c.SetDescription(str);
             c.AddFlag(str);
             c.AddProperty(str)[str] = str;
+            c.GetProperty(str).Value = null;
             c.GetProperty(str).Trash();
             c.GetProperty(str).DoCommit();
             this._configService.Update(c);

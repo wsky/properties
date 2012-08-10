@@ -49,10 +49,11 @@ namespace Properties.Web.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Properties(string btn
             , string id, string name
             , string description, string flags
-            , string value
+            , string value, string isTrashed
             , FormCollection formValues)
         {
             switch (btn)
@@ -64,10 +65,16 @@ namespace Properties.Web.Controllers
                     this.DropConfiguration(id);
                     break;
                 case "UpdateProperty":
-                    this.UpdateProperty(id, name, description, value, formValues);
+                    this.UpdateProperty(id, name, description, value, isTrashed, formValues);
                     break;
                 case "DropProperty":
                     this.DropProperty(id, name);
+                    break;
+                case "Commit":
+                    this.Commit(id, Request["cb"]);
+                    break;
+                case "CommitAll":
+                    this.CommitAll(id);
                     break;
                 default:
                     var c = this.GetConfig(id);
@@ -90,10 +97,11 @@ namespace Properties.Web.Controllers
         {
 
         }
-        public void UpdateProperty(string id, string name, string description, string value, FormCollection formValues)
+        public void UpdateProperty(string id, string name, string description, string value, string isTrashed, FormCollection formValues)
         {
             var c = this.GetConfig(id);
             var p = c.GetProperty(name);
+            p.Trash(isTrashed == "on");
             p.SetDescription(description);
             p.Value = value;
             foreach (var f in c.Flags)
@@ -102,7 +110,18 @@ namespace Properties.Web.Controllers
         }
         public void DropProperty(string id, string name)
         {
-
+        }
+        public void Commit(string id, string cb)
+        {
+            var c = this.GetConfig(id);
+            (cb ?? "").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().ForEach(o => c.GetProperty(o).DoCommit());
+            this._configService.Update(c);
+        }
+        public void CommitAll(string id)
+        {
+            var c = this.GetConfig(id);
+            c.GetProperties().ToList().ForEach(o => o.DoCommit());
+            this._configService.Update(c);
         }
 
         private Configuration CreateTemp(string name)

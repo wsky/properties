@@ -55,6 +55,10 @@ namespace Properties.Model
             this.Description = description;
         }
 
+        public IEnumerable<Property> GetProperties()
+        {
+            return this.Properties.Select(o => this.GetProperty(o));
+        }
         public Property GetProperty(string name)
         {
             var p = this._properties.FirstOrDefault(o => o.Name == name);

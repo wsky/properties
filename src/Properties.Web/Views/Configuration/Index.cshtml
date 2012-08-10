@@ -96,14 +96,21 @@
             {
                 if (j == 20) { break; }
                 var p = c.GetProperty(c.Properties.ElementAt(j));
+                if (p.IsTrashed) { continue; }
                 <div class="span2 well" 
                 data-original-title="<span class='pop-title'>@p.Name</span>" 
                 data-content="
                     <div class='pop-content'>
+                        @p.Value.Filter()
+                        @if (!string.IsNullOrWhiteSpace(p.Value))
+                        { <br /> }
+                        @p.Description.Filter()
+                        @if (!string.IsNullOrWhiteSpace(p.Description))
+                        { <br /> }
                         @for (var i = 0; i < c.Flags.Count(); i++)
                         {
                             <span class='label @label[i % 5]'>@c.Flags.ElementAt(i)</span>
-                            <div>@p[c.Flags.ElementAt(i)]</div>
+                            <div>@p[c.Flags.ElementAt(i)].Filter()</div>
                         }
                     </div>
                     "> <a href="@string.Concat(Url.Config(c), "#", c.Name)"><code>@p.Name</code>

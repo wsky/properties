@@ -61,7 +61,8 @@ namespace Properties.Model
             set
             {
                 this.Prepare(ref this._uncommitted, this._uncommittedValue);
-                this._uncommitted.AddOrUpdate(flag, value, (k, v) => value);
+                //HACK:ConcurrentDictionary do not support null value
+                this._uncommitted.AddOrUpdate(flag, value ?? string.Empty, (k, v) => value ?? string.Empty);
                 this._uncommittedValue = _serializer.JsonSerialize(this._uncommitted);
                 //parent configuration make change
                 this.Container.MakeChange();
@@ -107,6 +108,11 @@ namespace Properties.Model
             lock (this._lock)
                 this._committed = null;
             this.LastCommitTime = DateTime.UtcNow;
+        }
+        public bool HaveChanges()
+        {
+            return this._committedValue != this._uncommittedValue
+                || this._committedTrashed != this._uncommittedTrashed;
         }
 
         private void Prepare()

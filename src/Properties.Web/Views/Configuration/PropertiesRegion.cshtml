@@ -1,0 +1,34 @@
+﻿@{
+    var label = new string[] { "label-success", "label-warning", "label-important", "label-info", "label-inverse" };
+    var trashed = (bool)this.Model;
+    var c = ViewBag.Configuration as Properties.Model.Configuration;
+}
+<div class="row">
+    @for (var j = 0; j < c.Properties.Count(); j++)
+    {
+        var p = c.GetProperty(c.Properties.ElementAt(j));
+        if (p.IsTrashed != trashed) { continue; }
+        <div class="span2 well"
+            id="@p.Name"
+            onclick="edit('@p.Name')"
+            data-original-title="<span class='pop-title'>@p.Name</span>" 
+            data-content="
+            <div class='pop-content'>
+                @p.Value.Filter()
+                @if (!string.IsNullOrWhiteSpace(p.Value))
+                { <br /> }
+                @p.Description.Filter()
+                @if (!string.IsNullOrWhiteSpace(p.Description))
+                { <br /> }
+                @for (var i = 0; i < c.Flags.Count(); i++)
+                {
+                    <span class='label @label[i % 5]'>@c.Flags.ElementAt(i)</span>
+                    <div>@p[c.Flags.ElementAt(i)].Filter()</div>
+                }
+            </div>
+            "> <a href="#@p.Name"><code>@p.Name</code>
+                @p.Value
+            </a>
+        </div>
+    }
+</div>

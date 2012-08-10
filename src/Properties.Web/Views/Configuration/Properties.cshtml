@@ -4,12 +4,13 @@
     var label = new string[] { "label-success", "label-warning", "label-important", "label-info", "label-inverse" };
     var app = ViewBag.App as Properties.Model.Application;
     var c = ViewBag.Configuration as Properties.Model.Configuration;
-    var properties = new List<Properties.Model.Property>();
+    var properties = c.GetProperties();
 }
 
 @section Head{
     <style type="text/css">
-        div.row div.span3
+        form { margin:0; padding:0; }
+        div.row div.span2
         {
             padding: 5px;
             overflow: hidden;
@@ -23,8 +24,13 @@
         .pop-title { color:#d14; }
         .pop-content { line-height:25px; word-break:break-all }
         div.modal form textarea { height:100px; width:95% }
-        div.modal form input { width:95%}
-        div.modal form { margin:0; padding:0 }
+        div.modal form input[type=text] { width:95%}
+        
+        div#uncommitted .alert{ line-height:30px; }
+        div#uncommitted span.from,div#uncommitted span.to{ 
+        	display:inline-block; max-width:200px;
+        	overflow:hidden;text-overflow: ellipsis; word-break:break-all;
+        }
     </style>
 }
 <header>
@@ -34,6 +40,8 @@
     { 
         <span class="label @label[i % 5]">@c.Flags.ElementAt(i)</span>    
     }
+    @using (Html.BeginForm())
+    {
     <div class="btn-toolbar">
         <div class="btn-group">
             <a class="btn" href="#edit_config" data-toggle="modal">
@@ -42,7 +50,7 @@
             </a>
         </div>
         <div class="btn-group">
-            <button class="btn btn-success">
+            <button class="btn btn-success" name="btn" value="CommitAll" onclick="return confirm('Are you sure to commit all changes?')">
                 <i class="icon-upload"></i>
                 Commit All
             </button>
@@ -54,18 +62,20 @@
             </a>
         </div>
     </div>
+    }
     </p>
 
     <div class="alert">PS: you must committed changes after updating properties. </div>
 </header>
 <div class="tabbable">
   <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1" data-toggle="tab">Properties</a></li>
-    <li><a href="#tab2" data-toggle="tab">uncommited</a></li>
-    <li><a href="#tab3" data-toggle="tab">logs</a></li>
+    <li class="active"><a href="#properties" data-toggle="tab"><i class="icon-list-alt"></i> Properties</a></li>
+    <li><a href="#uncommitted" data-toggle="tab"><i class="icon-info-sign"></i> Uncommitted</a></li>
+    <li><a href="#logs" data-toggle="tab"><i class="icon-th-list"></i> Logs</a></li>
+    <li><a href="#trashed" data-toggle="tab"><i class="icon-trash"></i> Trashed</a></li>
   </ul>
   <div class="tab-content">
-    <div class="tab-pane active" id="tab1">
+    <div class="tab-pane active" id="properties">
         @using (Html.BeginForm())
         {
             <div class="input-append control-group">
@@ -73,46 +83,97 @@
                 <input type="text" name="name" placeholder="property name" /><button type="submit" class="btn" onclick="return check()"><i class="icon-plus"></i>&nbsp;New Property</button>
             </div>
         }
-        <div class="row">
-            @for (var j = 0; j < c.Properties.Count(); j++)
-            {
-                var p = c.GetProperty(c.Properties.ElementAt(j));
-                properties.Add(p);
-                <div class="span2 well"
-                    id="@p.Name"
-                    onclick="edit('@p.Name')"
-                    data-original-title="<span class='pop-title'>@p.Name</span>" 
-                    data-content="
-                    <div class='pop-content'>
-                        @for (var i = 0; i < c.Flags.Count(); i++)
-                        {
-                            <span class='label @label[i % 5]'>@c.Flags.ElementAt(i)</span>
-                            <div>@p[c.Flags.ElementAt(i)]</div>
-                        }
-                    </div>
-                    "> <a href="#@p.Name"><code>@p.Name</code>
-                        @p.Description
-                        <p>
-                            @p.Value
-                        </p>
-                    </a>
-                </div>
-            }
-        </div>
+        @{ Html.RenderPartial("PropertiesRegion", false, ViewData); }
     </div>
-    <div class="tab-pane" id="tab2">
-        <ul class="nav nav-tabs nav-stacked">
-            <li>
-                <a>
-                    <span class="badge">2012-10-10</span>
-                    wsky change
-                    <code>key</code> from <span class="label label-important">1</span> to <span class="label label-success">1</span>
-                     <button class="close">x</button>
-                </a>
-            </li>
-        </ul>
+    <div class="tab-pane" id="uncommitted">
+        @using (Html.BeginForm())
+        {
+            @Html.Hidden("id", c.ID)
+            <button class="btn" name="btn" value="Commit" onclick="return confirm('Are you sure to commit selected changes?')">
+                <i class="icon-upload"></i>
+                Commit Selected
+            </button>
+            <br /><br />
+            <ul class="nav nav-tabs nav-stacked">
+                @foreach (var k in c.Properties)
+                {
+                    var p = c.GetProperty(k);
+                    if (p.HaveChanges())
+                    {
+                        <li>
+                            <a>
+                                <label>
+                                    <input type="checkbox" name="cb" value="@p.Name" />
+                                    <code>@p.Name</code> has uncommitted changes
+                                    @if (p.LastCommitTime.HasValue)
+                                    {
+                                        <span>, and last committed at </span>
+                                        <span class="badge">@p.LastCommitTime</span>
+                                    }
+                                    else 
+                                    { 
+                                        <span>, and never committed before. </span>
+                                    }
+
+                                    <br />
+                                    <br />
+                                    <div class="alert alert-info">
+                                    @if (p.Uncommitted().IsTrashed != p.Committed().IsTrashed)
+                                    {
+                                        if (p.Uncommitted().IsTrashed)
+                                        {
+                                            <span><i class="icon-trash"></i> Mark as Trashed</span>
+                                            <br />
+                                        }
+                                        else
+                                        {
+                                            <span>resotre from Trashed</span>
+                                            <br />
+                                        }
+                                    }
+
+                                    @if (p.Uncommitted().Value != p.Committed().Value)
+                                    {
+                                        <i class="icon-edit"></i>
+                                        <span>update Value</span>
+                                        if (!string.IsNullOrWhiteSpace(p.Committed().Value))
+                                        {
+                                            <span>from</span>
+                                            <span class="label label-important from" title="@p.Committed().Value">@p.Committed().Value</span>
+                                        }
+                                        <span>to</span>
+                                        <span class="label label-inverse to" title="@p.Uncommitted().Value">@p.Uncommitted().Value</span>
+                                        <br />
+                                    }
+                                    @for (var i = 0; i < c.Flags.Count(); i++)
+                                    {
+                                        var f = c.Flags.ElementAt(i);
+                                        if (p.Uncommitted()[f] != p.Committed()[f])
+                                        {
+                                            <i class="icon-edit"></i>
+                                            <span>update Flag</span>
+                                            <span class='label @label[i % 5]'>@f</span>
+                                            <span>'s value</span>
+                                            if (!string.IsNullOrWhiteSpace(p.Committed()[f]))
+                                            {
+                                                <span>from</span>
+                                                <span class="label label-important from" title="@p.Committed()[f]">@p.Committed()[f]</span>
+                                            }
+                                            <span>to</span>
+                                            <span class="label label-inverse to" title="@p.Uncommitted()[f]">@p.Uncommitted()[f]</span>
+                                            <br />
+                                        }
+                                    }
+                                    </div>
+                                </label>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        }
     </div>
-    <div class="tab-pane" id="tab3">
+    <div class="tab-pane" id="logs">
         <ul class="nav nav-tabs nav-stacked">
             <li>
                 <a>
@@ -131,6 +192,9 @@
                 </a>
             </li>
         </ul>
+    </div>
+    <div class="tab-pane" id="trashed">
+        @{ Html.RenderPartial("PropertiesRegion", true, ViewData); }
     </div>
   </div>
 </div>
@@ -189,6 +253,7 @@
                 Edit Property <code id="name"></code></h3>
         </div>
         <div class="modal-body">
+            <label><input type="checkbox" name="isTrashed" /> <span class="label label-important">Trashed</span></label>
             <label>Value:</label>
             <textarea name="value" placeholder="Property value"></textarea>
             <br />
@@ -199,7 +264,7 @@
             { 
                 <span class="label @label[i % 5]">@c.Flags.ElementAt(i)</span>
                 <br />
-                <textarea name="flag_@c.Flags.ElementAt(i)" placeholder="Property value at @c.Flags.ElementAt(i) flag"></textarea>   
+                <textarea name="@Html.Raw("flag_" + c.Flags.ElementAt(i))" placeholder="Property value at @c.Flags.ElementAt(i) flag"></textarea>   
                 <br />
             }
         </div>
@@ -209,7 +274,7 @@
             @Html.Hidden("name")
             @Html.Hidden("id", c.ID)
         </div>
-    }
+     }
 </div>
 
 @section Bottom{
@@ -218,7 +283,8 @@
         {
             name = o.Name,
             description = o.Description,
-            value = o.Value,
+            isTrashed =o.Uncommitted().IsTrashed,
+            value = o.Uncommitted().Value,
             flagValues = c.Flags.Select(p => new KeyValuePair<string, string>(p, o[p])).ToDictionary(p => p.Key, p => p.Value)
         }).ToDictionary(o => o.name, o => o);
     }
@@ -232,11 +298,12 @@
         function edit(n) {
             var p = propertis[n];
             $('#edit_property #name').html(p.name);
+            $('#edit_property input[name="isTrashed"]').attr('checked', p.isTrashed);
             $('#edit_property input[name="name"]').val(p.name);
-            $('#edit_property textarea[name="value"]').val(p.value);
-            $('#edit_property textarea[name="description"]').val(p.description);
+            $('#edit_property textarea[name="value"]').text(p.value);
+            $('#edit_property textarea[name="description"]').text(p.description == null ? '' : p.description);
             for (var k in p.flagValues)
-                $('#edit_property textarea[name="flag_' + k + '"]').val(p.flagValues[k]);
+                $('#edit_property textarea[name="flag_' + k + '"]').text(p.flagValues[k]);
             $('#edit_property').modal('show');
         }
         function check() {

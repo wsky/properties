@@ -111,4 +111,9 @@ public static class Extensions
     {
         return url.Content(string.Format("~/Application/{0}/Configuration", a.ID));
     }
+
+    public static string Filter(this string input)
+    {
+        return string.IsNullOrEmpty(input) ? input : input.Replace("<script", "<").Replace("script>", ">");
+    }
 }
