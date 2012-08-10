@@ -1,7 +1,7 @@
 # Properties
 ==========
 
-properties/configuration/kv management module and system for your app
+Properties/Configuration management module/system for your app
 
 Cloud service or private deploy
 
@@ -9,7 +9,7 @@ Make configuration easier :)
 
 ## Demo
 
-- On AppHarbor
+- [On AppHarbor](https://properties.apphb.com)
 - On Azure
 
 - screenshoots
@@ -55,6 +55,7 @@ Make configuration easier :)
 		"appName": { "debug": "Your App Description", "test": "Your App Description" }
 	}
 	```
+	
 ## Trace
 
 ## Versioned
